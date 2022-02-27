@@ -7,18 +7,21 @@ namespace SourceGeneration
 {
     public class SyntaxReceiver : ISyntaxContextReceiver
     {
-        public List<INamedTypeSymbol> Properties { get; } = new List<INamedTypeSymbol>();
+        public List<IPropertySymbol> Properties { get; } = new List<IPropertySymbol>();
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
-            if (!(context.Node is ClassDeclarationSyntax classDeclarationSyntax) ||
-                classDeclarationSyntax.AttributeLists.Count <= 0) return;
-
-            if (context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax) is INamedTypeSymbol classSymbol && 
-                classSymbol.GetAttributes().Any(ad => ad.AttributeClass != null && 
-                                                      ad.AttributeClass.ToDisplayString() == "SourceGeneration.DataModel.DataModelAttribute"))
+            if (context.Node is ClassDeclarationSyntax classDeclarationSyntax &&
+                classDeclarationSyntax.AttributeLists.Count > 0)
             {
-                Properties.Add(classSymbol);
+                foreach (var namedTypeSymbol in classDeclarationSyntax.Members)
+                {
+                    var declaredSymbol = context.SemanticModel.GetDeclaredSymbol(namedTypeSymbol);
+                    if (declaredSymbol is IPropertySymbol classSymbol)
+                    {
+                        Properties.Add(classSymbol);
+                    } 
+                }
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -13,12 +12,12 @@ namespace SourceGeneration
     {
         public void Initialize(GeneratorInitializationContext context)
         {
-// #if DEBUG
-//             if (!Debugger.IsAttached)
-//             {
-//                 Debugger.Launch();
-//             }
-// #endif
+#if DEBUG
+            if (!Debugger.IsAttached)
+            {
+                Debugger.Launch();
+            }
+#endif
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 
@@ -27,16 +26,16 @@ namespace SourceGeneration
             if (!(context.SyntaxContextReceiver is SyntaxReceiver receiver))
                 return;
 
-            INamedTypeSymbol attributeSymbol = context.Compilation.GetTypeByMetadataName("SourceGeneration.DataModel.DataModelAttribute") ?? throw new ArgumentNullException("context.Compilation.GetTypeByMetadataName(\"SourceGeneration.DataModel.DataModelAttribute\")");
+            INamedTypeSymbol attributeSymbol = context.Compilation.GetTypeByMetadataName("SourceGeneration.DataModel.DataModelAttribute");
 
-            foreach (IGrouping<INamedTypeSymbol, INamedTypeSymbol> group in receiver.Properties.GroupBy(f => f.ContainingType))
+            foreach (IGrouping<INamedTypeSymbol, IPropertySymbol> group in receiver.Properties.GroupBy(f => f.ContainingType))
             {
                 string classSource = ProcessClass(group.Key, group.ToList(), attributeSymbol, context);
                 context.AddSource($"{group.Key.Name}.g.cs", SourceText.From(classSource, Encoding.UTF8));
             }
         }
 
-        private string ProcessClass(INamedTypeSymbol classSymbol, List<INamedTypeSymbol> fields, INamedTypeSymbol attributeSymbol, GeneratorExecutionContext context)
+        private string ProcessClass(INamedTypeSymbol classSymbol, List<IPropertySymbol> fields, ISymbol attributeSymbol, GeneratorExecutionContext context)
         {
             if (!classSymbol.ContainingSymbol.Equals(classSymbol.ContainingNamespace, SymbolEqualityComparer.Default))
             {
@@ -57,45 +56,30 @@ namespace SourceGeneration
             }
 
             source.Append("} }");
+            
             return source.ToString();
         }
 
-        private void ProcessField(StringBuilder source, ITypeSymbol fieldSymbol, INamedTypeSymbol attributeSymbol)
+        private void ProcessField(StringBuilder source, IPropertySymbol propertySymbol, ISymbol attributeSymbol)
         {
-            string fieldName = fieldSymbol.Name;
-            ITypeSymbol fieldType = fieldSymbol;
+            var propertyName = propertySymbol.Name;
+            var propertyType = propertySymbol.Type;
 
-            AttributeData attributeData = fieldSymbol.GetAttributes().Single(ad =>
-                ad.AttributeClass.Equals(attributeSymbol, SymbolEqualityComparer.Default));
-            TypedConstant overridenNameOpt =
-                attributeData.NamedArguments.SingleOrDefault(kvp => kvp.Key == "PropertyName").Value;
+            source.Append($@"
+                public {propertyType} {propertyName}
+                {{
+                    get
+                    {{
+                        return this.{propertyName};
+                    }}
+                    
+                    set
+                    {{
+                        this.{propertyName} = value;
+                    }}
+                }}
 
-            string propertyName = chooseName(fieldName, overridenNameOpt);
-            if (propertyName.Length == 0 || propertyName == fieldName)
-            {
-                return;
-            }
-        }
-
-        private string chooseName(string fieldName, TypedConstant overridenNameOpt)
-        {
-            if (!overridenNameOpt.IsNull)
-            {
-                return overridenNameOpt.Value.ToString();
-            }
-
-            fieldName = fieldName.TrimStart('_');
-            if (fieldName.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            if (fieldName.Length == 1)
-            {
-                return fieldName.ToUpper();
-            }
-
-            return fieldName.Substring(0, 1).ToUpper() + fieldName.Substring(1);
+                ");
         }
     }
 }
