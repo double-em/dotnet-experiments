@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Components Testing</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+
+    <script>
+        var selected = "Select a platform";
+        
+        function SetSelected(params) {
+            selected = params;
+            document.getElementById('selected-value').innerHTML = selected;
+            SetActive();
+        }
+
+        function SetActive(params) {
+            var element = document.getElementById('options');
+
+            if (element.className == "active") {
+                element.className = "";
+            }
+            else {
+                element.className = "active";
+            }
+        }
+    </script>
+    <div class="form-input-select">
+
+    <div id="app-cover">
+      <div title="o" id="select-box">
+
+        <div id="select-button" onclick="SetActive()">
+
+            <div id="selected-value">
+                <span>Select a platform</span>
+            </div>
+
+            <img class="menu-icon" src="expand.svg" alt="">
+
+        </div>
+
+        <div id="options">
+
+          <div class="option">
+            <input class="sc" type="radio" name="platform" value="codepen" title="test" onclick="SetSelected('CodePen')" />
+
+            <i class="option-icon face-icon"></i>
+            <span class="label">CodePen</span>
+
+          </div>
+          
+          <div class="option">
+            <input class="sc" type="radio" name="platform" value="dribbble" title="test" onclick="SetSelected('Dribbble')" />
+
+        
+            <i class="option-icon face-icon"></i>
+            <span class="label">Dribbble</span>
+
+          </div>
+
+          <div class="option">
+            <input class="sc" type="radio" name="platform" value="behance" title="test" onclick="SetSelected('Behance')" />
+
+            <i class="option-icon face-icon"></i>
+            <span class="label">Behance</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

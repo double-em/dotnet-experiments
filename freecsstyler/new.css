@@ -1,0 +1,164 @@
+.form-input-select {
+  display: block;
+  padding: 0;
+  position: relative;
+  /* Set options to normal weight */
+  /* ------------------------------------  */
+  /* START OF UGLY BROWSER-SPECIFIC HACKS */
+  /* ----------------------------------  */
+  /* FIREFOX won't let us hide the native select arrow, so we have to make it wider than needed and clip it via overflow on the parent container.
+         The percentage width is a fallback since FF 4+ supports calc() so we can just add a fixed amount of extra width to push the native arrow out of view. We're applying this hack across all FF versions because all the previous hacks were too fragile and complex.
+         You might want to consider not using this hack and using the native select arrow in FF. Note this makes the menus wider than the select button because they display at the specified width and aren't clipped. Targeting hack via http://browserhacks.com/#hack-758bff81c5c32351b02e10480b5ed48e */
+  /* Show only the native arrow */
+  display: block;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  font-size: 16px;
+  margin-top: 9px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.form-input-select::before, .form-input-select::after {
+  content: "";
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.form-input-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  background: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  border: 1px solid transparent;
+  font-size: 16px;
+  outline: none;
+  /* Focus style */
+}
+
+.form-input-select select:focus {
+  background-color: transparent;
+  outline: none;
+}
+
+.form-input-select option {
+  font-weight: normal;
+}
+
+.form-input-select x:-o-prefocus, .form-input-select::after {
+  display: none;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .form-input-select select::-ms-expand {
+    display: none;
+  }
+  .form-input-select select:focus::-ms-value {
+    background: transparent;
+    color: #000;
+  }
+}
+
+@-moz-document url-prefix() {
+  .form-input-select {
+    overflow: hidden;
+  }
+  .form-input-select select {
+    width: 120%;
+    width: calc(100% + 3em);
+    /* Firefox focus has odd artifacts around the text, this kills that. See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-focusring */
+  }
+  @supports (-moz-appearance: none) {
+    .form-input-select select {
+      width: 100%;
+    }
+  }
+  .form-input-select select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+  }
+}
+
+@supports (-moz-appearance: none) {
+  .form-input-select {
+    width: 100%;
+  }
+}
+
+.form-input-select::before, .form-input-select::after {
+  content: "";
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid transparent;
+  width: 0;
+  height: 0;
+  right: 16px;
+}
+
+.form-input-select::before {
+  bottom: 55%;
+  border-width: 0 6.5px 8px 6.5px;
+  border-bottom-color: #d6d6d6;
+}
+
+.form-input-select::after {
+  border-width: 8px 6.5px 0 6.5px;
+  border-top-color: #d6d6d6;
+  top: 55%;
+}
+
+@-moz-document url-prefix() {
+  .form-input-select {
+    border-right: 1px solid #e6e6e6;
+  }
+  .form-input-select:hover {
+    border-right: 1px solid #005ba6;
+  }
+}
+
+.form-input-select:hover select {
+  border-color: #005ba6;
+}
+
+.form-input-select:hover select:focus {
+  outline-color: transparent;
+}
+
+.form-input-select:hover::before {
+  border-bottom-color: #005ba6;
+}
+
+.form-input-select:hover::after {
+  border-top-color: #005ba6;
+}
+
+.form-input-select select {
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 20px;
+  -webkit-transition: border-color 0.2s ease, outline 0.2s ease;
+  transition: border-color 0.2s ease, outline 0.2s ease;
+}
+
+.form-input-select select:focus {
+  outline: 1px solid #005ba6;
+  outline-offset: -1px;
+}
+
+.form-input-select select[disabled], .form-input-select select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.form-input-select select:not(:focus):invalid {
+  color: #c7c7c7;
+}
+/*# sourceMappingURL=new.css.map */

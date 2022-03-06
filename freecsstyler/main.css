@@ -1,0 +1,167 @@
+* {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+*:focus {
+    outline: none;
+}
+
+html,
+body {
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    background-color: #ebf3f3;
+}
+
+#app-cover {
+    position: relative;
+    width: auto;
+    height: auto;
+}
+
+#select-box {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 6;
+}
+
+#select-button {
+    position: relative;
+    height: 16px;
+    padding: 12px 14px;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#options-view-button:focus ~ #select-button {
+    border-radius: 5px 5px 0 0;
+}
+
+#options-view-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* width: 100%;
+    height: 100%; */
+    margin: 0;
+    /* opacity: 0; */
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* #options-view-button:focus {
+    z-index: 0;
+} */
+
+#selected-value {
+    font-size: 16px;
+    line-height: 1;
+    margin-right: 26px;
+}
+
+.option .option-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.menu-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}
+
+.hidden {
+    transform: scale(0);
+}
+
+.active {
+    transform: scale(1) !important;
+}
+
+#options {
+    transform: scale(0);
+    position: relative;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.option {
+    position: relative;
+    display: flex;
+    z-index: 2;
+}
+
+.option-icon {
+    margin: 10px;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    background-color: black;
+}
+
+.face-icon {
+    -webkit-mask: url(face.svg) no-repeat center center;
+    mask: url(face.svg) no-repeat center center;
+}
+
+#options.active .option-icon {
+    display: block;
+}
+
+.label {
+    display: none;
+    padding: 10px;
+    flex-grow: 1;
+}
+
+#options.active .label {
+    display: block;
+}
+
+.sc {
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.option input[type="radio"]:checked ~ .option-icon {
+    background-color: #1a1aac;
+}
+
+.option input[type="radio"]:checked ~ .label {
+    color: #1a1aac;
+}
+
+.option:hover {
+    background-color: gray;
+}
+
+.option:hover .label {
+    color: #fff;
+}
+
+.option:hover i {
+    background-color: #fff;
+}
